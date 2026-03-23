@@ -1,6 +1,6 @@
 import cv2
-from .app.camera import Camera
-from .app.face_detector import FaceDetector
+from app.camera import Camera
+from app.face_detector import FaceDetector
 
 def main():
     camera = Camera()
@@ -22,9 +22,9 @@ def main():
                 break  
 
     finally:
-        camera.release()
+        camera.close_camera()
         cv2.destroyAllWindows()
 
 
-if __name__ == main:
+if __name__ == "__main__":
     main()
