@@ -19,6 +19,8 @@ class Camera:
 
         if not ret:
             raise RuntimeError("Error: Could not read frame from webcam")
+        
+        return frame
 
     def close_camera(self):
         if self.capture is not None:
