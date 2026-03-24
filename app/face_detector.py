@@ -13,7 +13,7 @@ class FaceDetector:
         if len(faces) == 0:
             return None
         
-        col, row, width, height = max(faces, key=lambda face: face[2] * faces[3])
+        col, row, width, height = max(faces, key=lambda face: face[2] * face[3])
         largest_face = frame[row:row + height, col: col + width]
         return largest_face
         
