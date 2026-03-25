@@ -1,5 +1,6 @@
 import cv2
 import os
+import random
 import numpy as np
 
 DATASET_PATH = "./../data/UTKFace"
@@ -20,6 +21,7 @@ def load_dataset(dataset_path):
         raise FileNotFoundError(f"Path to dataset not found: {dataset_path}")
     
     files = os.listdir(dataset_path)
+    files = random.shuffle(files)
     files = files[:SAMPLES]
     
     images = []
@@ -36,10 +38,10 @@ def load_dataset(dataset_path):
             if image is None:
                 raise ValueError("Cannot read image")
             preprocessed_image = preprocess_image(image)
-            images.append(preprocess_image)
-            genders.append()
-            ages.append()
-            categories.append()
+            images.append(preprocessed_image)
+            genders.append(gender)
+            ages.append(age)
+            categories.append(age_class)
         except Exception as e:
             print("An error ocurred while accessing file: f{file}")
 
@@ -53,7 +55,7 @@ def load_dataset(dataset_path):
 
     
 
-def preprocess_image():
+def preprocess_image(image):
     pass
 
 def get_labels():
