@@ -46,7 +46,7 @@ def load_dataset(dataset_path):
             ages.append(age)
             categories.append(age_class)
         except Exception as e:
-            print("An error ocurred while accessing file: f{file}")
+            print(f"An error ocurred while accessing file: {file}")
 
     X = np.array(images)
     y_gender = np.array(genders)
