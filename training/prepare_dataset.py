@@ -91,10 +91,20 @@ def plot_age_distribution(ages):
     plt.show()
 
 def plot_category_distribution(categories):
-    pass
+    counter = Counter(categories)
+    labels = counter.keys()
+    values = counter.values()
+    plt.bar(labels, values)
+    plt.title("Category distribution")
+    plt.show()
 
 def plot_gender_distribution(genders):
-    pass
+    counter = Counter(genders)
+    labels = ["Male", "Female"]
+    values = [counter[0], counter[1]]
+    plt.pie(values, labels=labels)
+    plt.title("Gender distribution")
+    plt.show()
 
 if __name__ == "__main__":
     pass
