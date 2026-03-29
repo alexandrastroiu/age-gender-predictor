@@ -17,7 +17,7 @@ AGE_CATEGORY = [
     (60, 75),
     (75, 120)
 ]
-SAMPLES =  50
+SAMPLES =  50 # modify sample size for training
 
 def load_dataset(dataset_path):
     if not os.path.isdir(dataset_path):
@@ -107,6 +107,7 @@ def plot_gender_distribution(genders):
     plt.title("Gender distribution")
     plt.show()
 
+# Test
 def main():
     X, y_gender, y_age, y_category = load_dataset(DATASET_PATH)
 
