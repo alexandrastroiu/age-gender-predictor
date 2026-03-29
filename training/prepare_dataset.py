@@ -3,6 +3,7 @@ import os
 import random
 import numpy as np
 import matplotlib.pyplot as plt
+import seaborn as sns
 from collections import Counter
 
 DATASET_PATH = "./../data/UTKFace"
@@ -16,14 +17,14 @@ AGE_CATEGORY = [
     (60, 75),
     (75, 120)
 ]
-SAMPLES = 5000
+SAMPLES =  50
 
 def load_dataset(dataset_path):
     if not os.path.isdir(dataset_path):
         raise FileNotFoundError(f"Path to dataset not found: {dataset_path}")
     
     files = os.listdir(dataset_path)
-    files = random.shuffle(files)
+    random.shuffle(files)
     files = files[:SAMPLES]
     
     images = []
@@ -47,12 +48,12 @@ def load_dataset(dataset_path):
         except Exception as e:
             print("An error ocurred while accessing file: f{file}")
 
-        X = np.array(images)
-        y_gender = np.array(genders)
-        y_age = np.array(ages)
-        y_category = np.array(categories)
+    X = np.array(images)
+    y_gender = np.array(genders)
+    y_age = np.array(ages)
+    y_category = np.array(categories)
 
-        return X, y_gender, y_age, y_category
+    return X, y_gender, y_age, y_category
 
 def preprocess_image(image):
     if image is None or image.size == 0:
@@ -84,7 +85,7 @@ def get_category(age):
 
 
 def plot_age_distribution(ages):
-    plt.hist(ages, bins=20, kde=True, color='lightgreen', edgecolor='blue')
+    sns.histplot(ages, bins=20, kde=True, color='lightgreen', edgecolor='blue')
     plt.title('Age distribution')
     plt.xlabel('Age')
     plt.ylabel('Distribution')
@@ -106,5 +107,17 @@ def plot_gender_distribution(genders):
     plt.title("Gender distribution")
     plt.show()
 
+def main():
+    X, y_gender, y_age, y_category = load_dataset(DATASET_PATH)
+
+    print("Images shape:", X.shape)
+    print("Gender labels shape:", y_gender.shape)
+    print("Age labels shape:", y_age.shape)
+    print("Category labels shape:", y_category.shape)
+
+    plot_age_distribution(y_age)
+    plot_category_distribution(y_category)
+    plot_gender_distribution(y_gender)
+    
 if __name__ == "__main__":
-    pass
+    main()
