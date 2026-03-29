@@ -2,6 +2,8 @@ import cv2
 import os
 import random
 import numpy as np
+import matplotlib.pyplot as plt
+from collections import Counter
 
 DATASET_PATH = "./../data/UTKFace"
 SIZE = (224, 224)
@@ -52,9 +54,6 @@ def load_dataset(dataset_path):
 
         return X, y_gender, y_age, y_category
 
-
-    
-
 def preprocess_image(image):
     if image is None or image.size == 0:
         raise ValueError("Invalid image")
@@ -84,12 +83,18 @@ def get_category(age):
     raise ValueError(f"Age {age} does not belong in any category")
 
 
+def plot_age_distribution(ages):
+    plt.hist(ages, bins=20, kde=True, color='lightgreen', edgecolor='blue')
+    plt.title('Age distribution')
+    plt.xlabel('Age')
+    plt.ylabel('Distribution')
+    plt.show()
 
-def get_age_distribution():
+def plot_category_distribution(categories):
     pass
 
-def get_category_distribution():
+def plot_gender_distribution(genders):
     pass
 
-def get_gender_distribution():
+if __name__ == "__main__":
     pass
