@@ -58,8 +58,27 @@ def load_dataset(dataset_path):
 def preprocess_image(image):
     pass
 
-def get_labels():
-    pass
+def get_labels(filename):
+    root, ext  = os.path.splitext(filename)
+    labels = root.split("_")
+
+    if len(labels) != 4:
+        raise ValueError(f"Invalid file format: {filename}")
+    
+    age = int(labels[0])
+    gender = int(labels[1])
+    category = get_category(age)
+
+    return age, gender, category
+
+def get_category(age):
+    for index, category in enumerate(AGE_CATEGORY):
+        if category[0] <= age and age <= category[1]:
+            return index
+    
+    raise ValueError(f"Age {age} does not belong in any category")
+
+
 
 def get_age_distribution():
     pass
