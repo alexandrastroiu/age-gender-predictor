@@ -56,7 +56,13 @@ def load_dataset(dataset_path):
     
 
 def preprocess_image(image):
-    pass
+    if image is None or image.size == 0:
+        raise ValueError("Invalid image")
+    
+    image = cv2.resize(image, SIZE)
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    image = image.astype("float32") / 255.0
+    return image
 
 def get_labels(filename):
     root, ext  = os.path.splitext(filename)
@@ -68,7 +74,6 @@ def get_labels(filename):
     age = int(labels[0])
     gender = int(labels[1])
     category = get_category(age)
-
     return age, gender, category
 
 def get_category(age):
