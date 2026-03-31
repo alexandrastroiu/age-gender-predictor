@@ -83,6 +83,9 @@ def main():
     # Evaluate model
     results = model.evaluate(X_test, y_gender_test, y_age_test)
     # Save model
+    os.makedirs(os.path.dirname(MODEL_PATH), exist_ok=True)
+    model.save(MODEL_PATH)
+    print(f"\nModel saved to: {MODEL_PATH}")
 
 
 if __name__ == "__main__":
