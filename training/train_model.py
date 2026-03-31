@@ -8,11 +8,47 @@ from keras.utils import to_categorical
 from prepare_dataset import load_dataset
 
 DATASET_PATH = "./../data/UTKFace"
+MODEL_PATH = ""
 NUM_CLASSES = 7
+EPOCHS = 0    #TODO
+BATCH_SIZE = 0 #TODO
 
 # Create the CNN model build architecture
-def build_model():
-    pass
+def build_model(shape):
+    input_layer = keras.Input(shape=shape, name="Input image")
+    x = layers.Conv2D(32, 3, activation="relu")(input_layer)
+    x = layers.MaxPooling2D(2)(x)
+    x = layers.Conv2D(64, 3, activation="relu")(x)
+    x = layers.MaxPooling2D(2)(x)
+    x = layers.Conv2D(128, 3, activation="relu")(x)
+    x = layers.MaxPooling2D(2)(x)
+    x = layers.Conv2D(256, 3, activation="relu")(x)
+    x = layers.MaxPooling2D(2)(x)
+    x = layers.Flatten()(x)
+    x = layers.Dense(256, activation="relu")(x)
+
+    output_age = layers.Dense(NUM_CLASSES, activation="softmax", name="age_output")(x)
+    output_gender = layers.Dense(1, activation="sigmoid", name="gender_output")(x)
+
+    model = keras.Model(
+        inputs=input_layer,
+        output=[output_age, output_gender],
+        name="age_gender_model"
+    )
+
+    model.compile(
+        optimizer="adam",
+        loss={
+            "age_output": "categorical_crossentropy",
+            "gender_output": "binary_crossentropy"
+        },
+        metrics={
+            "age_output": ["accuracy"],
+            "gender_output": ["accuracy"]
+        }
+    )
+
+    return model
 
 def main():
     # Load dataset
@@ -35,7 +71,7 @@ def main():
     print(y_age_train.shape)
     print(y_age_test.shape)
     # Build the model
-    model = model_build()
+    model = build_model((224,224,3))
     # Train model
     # Evaluate model
     # Save model
