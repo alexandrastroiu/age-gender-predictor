@@ -8,7 +8,7 @@ from keras.utils import to_categorical
 from prepare_dataset import load_dataset
 
 DATASET_PATH = "./../data/UTKFace"
-MODEL_PATH = "" #TODO
+MODEL_PATH = "./../models/age_gender_model.keras"
 NUM_CLASSES = 7
 EPOCHS = 10    #TODO
 BATCH_SIZE = 32 #TODO
