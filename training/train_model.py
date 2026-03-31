@@ -8,10 +8,10 @@ from keras.utils import to_categorical
 from prepare_dataset import load_dataset
 
 DATASET_PATH = "./../data/UTKFace"
-MODEL_PATH = ""
+MODEL_PATH = "" #TODO
 NUM_CLASSES = 7
-EPOCHS = 0    #TODO
-BATCH_SIZE = 0 #TODO
+EPOCHS = 10    #TODO
+BATCH_SIZE = 32 #TODO
 
 # Create the CNN model build architecture
 def build_model(shape):
@@ -73,7 +73,15 @@ def main():
     # Build the model
     model = build_model((224,224,3))
     # Train model
+    history = model.fit(
+                        X_train,
+                        [y_gender_train, y_age_train],
+                        validation_data=(X_test, [y_gender_test, y_age_test]),
+                        batch_size=BATCH_SIZE,
+                        epochs=EPOCHS
+                    )
     # Evaluate model
+    results = model.evaluate(X_test, y_gender_test, y_age_test)
     # Save model
 
 
