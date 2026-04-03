@@ -32,7 +32,7 @@ def build_model(shape):
 
     model = keras.Model(
         inputs=input_layer,
-        output=[output_age, output_gender],
+        outputs=[output_gender, output_age],
         name="age_gender_model"
     )
 
@@ -72,16 +72,29 @@ def main():
     print(y_age_test.shape)
     # Build the model
     model = build_model((224,224,3))
+    model.summary()
     # Train model
     history = model.fit(
                         X_train,
-                        [y_gender_train, y_age_train],
-                        validation_data=(X_test, [y_gender_test, y_age_test]),
+                        {
+                            "gender_output": y_gender_train,
+                            "age_output": y_age_train
+                        },
+                        validation_data=(X_test,                             
+                        {
+                            "gender_output": y_gender_test,
+                            "age_output": y_age_test
+                        }),
                         batch_size=BATCH_SIZE,
                         epochs=EPOCHS
                     )
     # Evaluate model
-    results = model.evaluate(X_test, y_gender_test, y_age_test)
+    results = model.evaluate(X_test,
+                            {
+                                "gender_output": y_gender_test,
+                                "age_output": y_age_test
+                            })
+    print(results)
     # Save model
     os.makedirs(os.path.dirname(MODEL_PATH), exist_ok=True)
     model.save(MODEL_PATH)
