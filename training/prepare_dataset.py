@@ -17,7 +17,7 @@ AGE_CATEGORY = [
     (60, 75),
     (75, 120)
 ]
-SAMPLES =  200 # modify sample size for training
+SAMPLES =  5000 # modify sample size for training
 
 def load_dataset(dataset_path):
     if not os.path.isdir(dataset_path):

@@ -6,26 +6,36 @@ from keras import layers
 from sklearn.model_selection import train_test_split
 from keras.utils import to_categorical
 from prepare_dataset import load_dataset
+from keras.callbacks import EarlyStopping
 
 DATASET_PATH = "./../data/UTKFace"
 MODEL_PATH = "./../models/age_gender_model.keras"
 NUM_CLASSES = 7
-EPOCHS = 10    #TODO
+EPOCHS = 20    #TODO
 BATCH_SIZE = 32 #TODO
 
 # Create the CNN model build architecture
 def build_model(shape):
     input_layer = keras.Input(shape=shape, name="Input image")
     x = layers.Conv2D(32, 3, activation="relu")(input_layer)
+    x = layers.BatchNormalization()(x)
     x = layers.MaxPooling2D(2)(x)
+
     x = layers.Conv2D(64, 3, activation="relu")(x)
+    x = layers.BatchNormalization()(x)
     x = layers.MaxPooling2D(2)(x)
+
     x = layers.Conv2D(128, 3, activation="relu")(x)
+    x = layers.BatchNormalization()(x)
     x = layers.MaxPooling2D(2)(x)
+
     x = layers.Conv2D(256, 3, activation="relu")(x)
+    x = layers.BatchNormalization()(x)
     x = layers.MaxPooling2D(2)(x)
+
     x = layers.Flatten()(x)
     x = layers.Dense(256, activation="relu")(x)
+    x = layers.Dropout(0.4)(x) # reduce overfitting
 
     output_age = layers.Dense(NUM_CLASSES, activation="softmax", name="age_output")(x)
     output_gender = layers.Dense(1, activation="sigmoid", name="gender_output")(x)
@@ -41,6 +51,10 @@ def build_model(shape):
         loss={
             "age_output": "categorical_crossentropy",
             "gender_output": "binary_crossentropy"
+        },
+        loss_weights={
+            "age_output": 2.0,
+            "gender_output": 1.0
         },
         metrics={
             "age_output": ["accuracy"],
@@ -74,6 +88,9 @@ def main():
     # Build the model
     model = build_model((224,224,3))
     model.summary()
+
+    callbacks = EarlyStopping(monitor='val_age_output_accuracy',patience=5, restore_best_weights=True, mode="max")
+
     # Train model
     history = model.fit(
                         X_train,
@@ -87,7 +104,8 @@ def main():
                             "age_output": y_age_test
                         }),
                         batch_size=BATCH_SIZE,
-                        epochs=EPOCHS
+                        epochs=EPOCHS,
+                        callbacks=[callbacks]
                     )
     # Evaluate model
     results = model.evaluate(X_test,
