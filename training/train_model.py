@@ -61,7 +61,8 @@ def main():
         y_category_encoded,
         test_size=0.2,
         random_state=42,
-        shuffle=True
+        shuffle=True,
+        stratify=y_gender
     )
     # Check shapes
     print(X_train.shape)
