@@ -3,17 +3,15 @@ import cv2
 import tensorflow as tf
 from keras.models import load_model
 
-MODEL_PATH = "./../models/age_gender_model.keras"
-TEST_IMAGE_PATH = "./../data/faces/"
+MODEL_PATH = "./models/age_gender_model.keras"
+TEST_IMAGE_PATH = "./data/UTKFace/20_1_4_20161223230110540.jpg.chip.jpg"
 SIZE = (224, 224)
 AGE_CATEGORY = [
-    "0 - 12",
-    "13 - 19",
-    "0 - 29",
-    "30 - 45",
-    "46 - 60",
-    "60 - 75",
-    "75 +"
+    (0,12),
+    (13, 24),
+    (25, 39),
+    (40, 59),
+    (60, 120),
 ]
 
 class Prediction:
@@ -31,7 +29,7 @@ class Prediction:
     def predict(self, image):
         image = self.preprocess(image)
         gender_pred, age_pred = self.model.predict(image)
-        gender = "Female" if gender_pred[0][0] else "Male"
+        gender = "Female" if gender_pred[0][0] > 0.5 else "Male"
         age_category = AGE_CATEGORY[np.argmax(age_pred[0])]
         return {
             "gender": gender,
@@ -43,7 +41,8 @@ class Prediction:
 # Test prediction on one image
 def main():
     prediction = Prediction()
-    print(prediction.predict(TEST_IMAGE_PATH))
+    image = cv2.imread(TEST_IMAGE_PATH)
+    print(prediction.predict(image))
 
 if __name__=="__main__":
     main()
