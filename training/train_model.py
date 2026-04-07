@@ -10,8 +10,8 @@ from keras.callbacks import EarlyStopping
 
 DATASET_PATH = "./../data/UTKFace"
 MODEL_PATH = "./../models/age_gender_model.keras"
-NUM_CLASSES = 7
-EPOCHS = 20    #TODO
+NUM_CLASSES = 5
+EPOCHS = 40    #TODO
 BATCH_SIZE = 32 #TODO
 
 # Create the CNN model build architecture
@@ -76,7 +76,7 @@ def main():
         test_size=0.2,
         random_state=42,
         shuffle=True,
-        stratify=y_gender
+        stratify=y_category
     )
     # Check shapes
     print(X_train.shape)

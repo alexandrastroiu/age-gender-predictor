@@ -10,14 +10,12 @@ DATASET_PATH = "./../data/UTKFace"
 SIZE = (224, 224)
 AGE_CATEGORY = [
     (0,12),
-    (13, 19),
-    (20, 29),
-    (30, 45),
-    (46, 60),
-    (60, 75),
-    (75, 120)
+    (13, 24),
+    (25, 39),
+    (40, 59),
+    (60, 120),
 ]
-SAMPLES =  5000 # modify sample size for training
+SAMPLES =  7000 # modify sample size for training
 
 def load_dataset(dataset_path):
     if not os.path.isdir(dataset_path):
