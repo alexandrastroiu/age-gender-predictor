@@ -3,6 +3,7 @@ import os
 import datetime
 from app.camera import Camera
 from app.face_detector import FaceDetector
+from app.prediction import Prediction
 
 def save_image(face):
     directory_name = "data/faces"
@@ -21,6 +22,7 @@ def save_image(face):
 def main():
     camera = Camera()
     detector = FaceDetector()
+    prediction = Prediction()
 
     try:
         camera.start_camera()
@@ -45,8 +47,8 @@ def main():
                     save_image(largest_face)
                 else:
                     print("No face detected")
-            
-
+            elif key == ord('p') and largest_face is not None:
+                print(prediction.predict(largest_face))
     finally:
         camera.close_camera()
         cv2.destroyAllWindows()
