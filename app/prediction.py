@@ -2,7 +2,7 @@ import numpy as np
 import cv2
 import tensorflow as tf
 from keras.models import load_model
-from preprocessing import preprocess_face
+from app.preprocessing import preprocess_face
 
 MODEL_PATH = "./models/age_gender_model.keras"
 SIZE = (224, 224)
