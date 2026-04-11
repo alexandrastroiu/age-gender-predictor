@@ -6,6 +6,8 @@ from app.face_detector import FaceDetector
 from app.prediction import Prediction
 from app.preprocessing import preprocess_face
 import cv2
+import webbrowser
+import urllib.parse
 
 
 root = tk.Tk()
@@ -56,13 +58,13 @@ label_result.place(relx=0.5, rely=0.5, relwidth=0.5, relheight=0.53, anchor = 'w
 box_gender = tk.Label(label_result, text="Gender: ", width=50, height=2, relief="solid", bd=1, anchor="center", font=font, bg="white")
 box_gender.grid(row=0, column=0, padx=50, pady=50)
 
-box_gender_conf = tk.Label(label_result, text="Gender confidence: ", width=50, height=2, relief="solid", bd=1, anchor="center",font=font, bg="white")
+box_gender_conf = tk.Label(label_result, text="Gender Prediction Confidence: ", width=50, height=2, relief="solid", bd=1, anchor="center",font=font, bg="white")
 box_gender_conf.grid(row=1, column=0, padx=50, pady=25)
 
 box_age = tk.Label(label_result, text="Age Range: ", width=50, height=2, relief="solid", bd=1, anchor="center", font=font, bg="white")
 box_age.grid(row=2, column=0, padx=50, pady=25)
 
-box_age_conf = tk.Label(label_result, text="Age confidence: ", width=50, height=2, relief="solid", bd=1, anchor="center", font=font, bg="white")
+box_age_conf = tk.Label(label_result, text="Age Prediction Confidence: ", width=50, height=2, relief="solid", bd=1, anchor="center", font=font, bg="white")
 box_age_conf.grid(row=3, column=0, padx=50, pady=25)
 
 
@@ -98,9 +100,24 @@ def get_prediction():
     
     result = prediction.predict(largest_face)
     box_gender.config(text=f"Gender: {result["Gender"]}")
-    box_gender_conf.config(text=f"Gender Confidence: {(result["Gender Confidence"] * 100):.2f} %")
+    box_gender_conf.config(text=f"Gender Prediction Confidence: {(result["Gender Confidence"] * 100):.2f} %")
     box_age.config(text=f"Age Range: {result["Age Category"]}")
-    box_age_conf.config(text=f"Age Confidence: {result["Age Confidence"] * 100 :.2f} %")
+    box_age_conf.config(text=f"Age Prediction Confidence: {result["Age Confidence"] * 100 :.2f} %")
+
+
+def share_results():
+    result_text = (
+        f"{box_gender.cget('text')}\n"
+        f"{box_gender_conf.cget('text')}\n"
+        f"{box_age.cget('text')}\n"
+        f"{box_age_conf.cget('text')}"
+    )
+
+    subject = urllib.parse.quote("My Age & Gender Prediction App Results")
+    body = urllib.parse.quote(f"Hi!\n\nSee my results on the Age & Gender Prediction App:\n\n{result_text}")
+
+    webbrowser.open(f"mailto:?subject={subject}&body={body}")
+        
 
 
 def close():
@@ -113,7 +130,7 @@ update_camera()
 quit_button = tk.Button(root, text="Quit Age & Gender Prediction App", command=close, font=font_header, width=30, height=1)
 quit_button.pack(side="bottom", pady=10)
 
-share_button = tk.Button(root, text="Share Results", font=font_header, width=30, height=1)
+share_button = tk.Button(root, text="Share Results", font=font_header, width=30, height=1, command=share_results)
 share_button.pack(side="bottom", pady=10)
 
 button = tk.Button(root, text="Get Prediction", command=get_prediction, font=font_header, width=30, height=1)
