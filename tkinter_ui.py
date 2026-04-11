@@ -89,7 +89,8 @@ def close():
 
 update_camera()
 
-
+quit_button = tk.Button(root, text="Quit Age & Gender Prediction App", command=close)
+quit_button.pack(pady=20)
 
 
 root.protocol("WM_DELETE_WINDOW", close)
