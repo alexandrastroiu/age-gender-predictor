@@ -42,6 +42,12 @@ camera.start_camera()
 def update_camera():
     try:
         frame = camera.read_frame()
+        faces = face_detector.detect_face(frame)
+        for (x, y, w, h) in faces:
+                cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+
+        largest_face = face_detector.select_largest_face(faces, frame)
+        
         img = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         resized_img = cv2.resize(img, (820, 500))
         img = Image.fromarray(resized_img)
