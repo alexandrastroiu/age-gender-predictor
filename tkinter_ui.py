@@ -13,6 +13,7 @@ face_detector = FaceDetector()
 prediction = Prediction()
 
 root.title("Age & Gender Prediction App")
+root.configure(bg='#E5E5FF')
 
 menu = tk.Menu(root)
 root.config(menu=menu)
@@ -31,8 +32,10 @@ label.pack(pady=40)
 label1 = tk.Label(root, text="Welcome!", bg="lightgray", fg="black")
 label1.pack()
 
-label_img = tk.Label(root)
+label_img = tk.Label(master=root)
+label_img.configure(bg='#E5E5FF')
 label_img.pack(pady=40)
+label_img.place(relx=0.5, rely=0.5, relwidth=0.6, relheight=0.6, anchor = 'e')
 
 camera.start_camera()
 
@@ -40,7 +43,8 @@ def update_camera():
     try:
         frame = camera.read_frame()
         img = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        img = Image.fromarray(img)
+        resized_img = cv2.resize(img, (820, 500))
+        img = Image.fromarray(resized_img)
         imgtk = ImageTk.PhotoImage(image=img)
         label_img.imgtk = imgtk
         label_img.configure(image=imgtk)
