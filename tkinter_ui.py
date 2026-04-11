@@ -35,7 +35,7 @@ filemenu.add_command(label="""
             * Click the 'Share results' button to hare results online
              """, font=font)
 
-label = tk.Label(root, text="Age & Gender Prediction App", bg="#EAE8F8",fg="#2C2C2C", font=font_title)
+label = tk.Label(root, text="Age & Gender Prediction App \U0001F52E", bg="#EAE8F8",fg="#2C2C2C", font=font_title)
 label.pack(pady=40)
 
 
