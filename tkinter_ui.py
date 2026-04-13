@@ -162,7 +162,14 @@ def get_prediction():
 
     if largest_face is None:
         label_result.config(text="No face detected")
+        box_gender.config(text=f"Gender: - ")
+        box_gender_conf.config(text=f"Gender Prediction Confidence: - %")
+        box_age.config(text=f"Age Range: - ")
+        box_age_conf.config(text=f"Age Prediction Confidence: - %")
         return
+    else:
+        if label_result.cget("text") != "Prediction Results":
+            label_result.config(text="Prediction Results")
 
     # Display prediction results in the GUI
     result = prediction.predict(largest_face)
