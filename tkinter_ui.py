@@ -194,7 +194,7 @@ def share_results():
 
 
 # Close the app
-def close():
+def close_app():
     camera.close_camera()
     root.destroy()
 
@@ -206,7 +206,7 @@ update_camera()
 quit_button = tk.Button(
     root,
     text="Quit Age & Gender Prediction App",
-    command=close,
+    command=close_app,
     font=font_header,
     width=30,
     height=1,
@@ -223,7 +223,7 @@ share_button = tk.Button(
 )
 share_button.pack(side="bottom", pady=10)
 
-button = tk.Button(
+prediction_button = tk.Button(
     root,
     text="Get Prediction",
     command=get_prediction,
@@ -231,9 +231,9 @@ button = tk.Button(
     width=30,
     height=1,
 )
-button.pack(side="bottom", pady=10)
+prediction_button.pack(side="bottom", pady=10)
 
 
-root.protocol("WM_DELETE_WINDOW", close)
+root.protocol("WM_DELETE_WINDOW", close_app)
 
 root.mainloop()
