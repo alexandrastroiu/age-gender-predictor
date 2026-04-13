@@ -14,6 +14,7 @@ AGE_CATEGORY = [
     "60 - 120",
 ]
 
+
 class Prediction:
     def __init__(self):
         # Load the trained model
@@ -26,11 +27,13 @@ class Prediction:
         gender_pred, age_pred = self.model.predict(image)
         # Gender is labeled as 1 - Female and 0 - Male in the UTKFace dataset
         gender = "Female" if gender_pred[0][0] > 0.5 else "Male"
-        gender_confidence = gender_pred[0][0] if gender == "Female" else 1 - gender_pred[0][0]
+        gender_confidence = (
+            gender_pred[0][0] if gender == "Female" else 1 - gender_pred[0][0]
+        )
         age_category = AGE_CATEGORY[np.argmax(age_pred[0])]
         return {
             "Gender": gender,
             "Gender Confidence": gender_confidence,
             "Age Category": age_category,
-            "Age Confidence": float(np.max(age_pred[0]))
+            "Age Confidence": float(np.max(age_pred[0])),
         }

@@ -9,25 +9,26 @@ from collections import Counter
 DATASET_PATH = "./../data/UTKFace"
 SIZE = (224, 224)
 AGE_CATEGORY = [
-    (0,12),
+    (0, 12),
     (13, 24),
     (25, 39),
     (40, 59),
     (60, 120),
 ]
 # Sample size for training
-SAMPLES =  7000
+SAMPLES = 7000
+
 
 def load_dataset(dataset_path):
     if not os.path.isdir(dataset_path):
         raise FileNotFoundError(f"Path to dataset not found: {dataset_path}")
-    
+
     files = os.listdir(dataset_path)
     # Shuffle the files in the dataset
     random.shuffle(files)
     # Select a part of the original dataset
     files = files[:SAMPLES]
-    
+
     images = []
     genders = []
     ages = []
@@ -41,8 +42,9 @@ def load_dataset(dataset_path):
             age, gender, age_class = get_labels(file)
             image = cv2.imread(fpath)
             if image is None:
-                raise ValueError("Cannot read image")\
-            # Apply preprocessing on the image
+                raise ValueError(
+                    "Cannot read image"
+                )  # Apply preprocessing on the image
             preprocessed_image = preprocess_image(image)
             images.append(preprocessed_image)
             genders.append(gender)
@@ -60,44 +62,50 @@ def load_dataset(dataset_path):
 
     return X, y_gender, y_age, y_category
 
+
 def preprocess_image(image):
     if image is None or image.size == 0:
         raise ValueError("Invalid image")
-    
+
     image = cv2.resize(image, SIZE)
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     image = image.astype("float32") / 255.0
     return image
 
+
 def get_labels(filename):
-    root, ext  = os.path.splitext(filename)
+    root, ext = os.path.splitext(filename)
     labels = root.split("_")
 
     if len(labels) != 4:
         raise ValueError(f"Invalid file format: {filename}")
-    
+
     # Get the labels embedded in the filename
     age = int(labels[0])
     gender = int(labels[1])
     category = get_category(age)
     return age, gender, category
 
+
 # Determine the age category based on age
 def get_category(age):
     for index, category in enumerate(AGE_CATEGORY):
         if category[0] <= age and age <= category[1]:
             return index
-    
+
     raise ValueError(f"Age {age} does not belong in any category")
+
 
 # Visualize data distribution
 
+
 def plot_age_distribution(ages):
-    sns.histplot(ages, bins=20, kde=True, color='lightgreen', edgecolor='blue')
-    plt.title('Age distribution')
-    plt.xlabel('Age')
-    plt.ylabel('Distribution')
+    sns.histplot(ages, bins=20, kde=True, color="lightgreen", edgecolor="blue")
+    plt.title("Age distribution")
+    plt.xlabel("Age")
+    plt.ylabel("Distribution")
     plt.show()
+
 
 def plot_category_distribution(categories):
     counter = Counter(categories)
@@ -107,6 +115,7 @@ def plot_category_distribution(categories):
     plt.title("Category distribution")
     plt.show()
 
+
 def plot_gender_distribution(genders):
     counter = Counter(genders)
     labels = ["Male", "Female"]
@@ -114,6 +123,7 @@ def plot_gender_distribution(genders):
     plt.pie(values, labels=labels)
     plt.title("Gender distribution")
     plt.show()
+
 
 # Test
 def main():
@@ -127,6 +137,7 @@ def main():
     plot_age_distribution(y_age)
     plot_category_distribution(y_category)
     plot_gender_distribution(y_gender)
-    
+
+
 if __name__ == "__main__":
     main()

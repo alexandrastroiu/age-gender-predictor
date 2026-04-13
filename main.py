@@ -5,6 +5,7 @@ from app.camera import Camera
 from app.face_detector import FaceDetector
 from app.prediction import Prediction
 
+
 def save_image(face):
     directory_name = "data/faces"
 
@@ -17,7 +18,8 @@ def save_image(face):
     filename = f"data/faces/face_{timestamp}.jpg"
     cv2.imwrite(filename, face)
     print(f"Saved face snapshot to: {filename}")
-        
+
+
 # Test the end-to-end pipeline
 def main():
     camera = Camera()
@@ -31,23 +33,23 @@ def main():
             frame = camera.read_frame()
             faces = detector.detect_face(frame)
 
-            for (x, y, w, h) in faces:
+            for x, y, w, h in faces:
                 cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
 
             largest_face = detector.select_largest_face(faces, frame)
-            
+
             cv2.imshow("Face Detection", frame)
 
-            key = cv2.waitKey(1) & 0xFF   
+            key = cv2.waitKey(1) & 0xFF
 
-            if  key == ord('q'):
-                break  
-            elif key == ord('s'):
+            if key == ord("q"):
+                break
+            elif key == ord("s"):
                 if largest_face is not None:
                     save_image(largest_face)
                 else:
                     print("No face detected")
-            elif key == ord('p') and largest_face is not None:
+            elif key == ord("p") and largest_face is not None:
                 print(prediction.predict(largest_face))
     finally:
         camera.close_camera()

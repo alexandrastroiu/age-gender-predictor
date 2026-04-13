@@ -3,6 +3,7 @@ import numpy as np
 
 SIZE = (224, 224)
 
+
 # Image preprocessing before prediction
 def preprocess_face(face):
     # Resize the image
