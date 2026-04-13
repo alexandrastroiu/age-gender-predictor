@@ -27,12 +27,13 @@ font_title = tkinter.font.Font(family="Helvetica", size=32, weight="bold")
 menu = tk.Menu(root)
 root.config(menu=menu)
 
+# Instructions menu
 filemenu = tk.Menu(menu)
 menu.add_cascade(label="Instructions", menu=filemenu, font=font)
 filemenu.add_command(label="""
             * Upload a picture from your computer or capture a snapshot from your camera
             * Click the 'Run prediction' button to see your predicted age and gender
-            * Click the 'Share results' button to hare results online
+            * Click the 'Share results' button to share results online
              """, font=font)
 
 label = tk.Label(root, text="Age & Gender Prediction App \U0001F52E", bg="#EAE8F8",fg="#2C2C2C", font=font_title)
@@ -45,16 +46,19 @@ label1.pack()
 separator = tk.Frame(root, height=2, bg="#2C2C2C")
 separator.pack(fill="x", pady=10)
 
+# Label for webcam image
 label_img = tk.Label(master=root)
 label_img.configure(bg='#EAE8F8')
 label_img.pack(pady=40)
 label_img.place(relx=0.5, rely=0.5, relwidth=0.6, relheight=0.6, anchor = 'e')
 
+# Label for prediction results
 label_result = tk.Label(master=root, text="Prediction Results", font=font_header, anchor="n")
 label_result.configure(bg='white')
 label_result.pack(pady=40)
 label_result.place(relx=0.5, rely=0.5, relwidth=0.5, relheight=0.53, anchor = 'w')
 
+# Labels for individual prediction results
 box_gender = tk.Label(label_result, text="Gender: ", width=50, height=2, relief="solid", bd=1, anchor="center", font=font, bg="white")
 box_gender.grid(row=0, column=0, padx=50, pady=50)
 
@@ -67,44 +71,52 @@ box_age.grid(row=2, column=0, padx=50, pady=25)
 box_age_conf = tk.Label(label_result, text="Age Prediction Confidence: ", width=50, height=2, relief="solid", bd=1, anchor="center", font=font, bg="white")
 box_age_conf.grid(row=3, column=0, padx=50, pady=25)
 
-
+# Start the webcam
 camera.start_camera()
 
+# Update the GUI to display frames from the webcam
 def update_camera():
     global current_frame, current_face
     try:
+        # Read the frame from the webcam
         frame = camera.read_frame()
         current_frame = frame.copy()
+        # Detect the face
         faces = face_detector.detect_face(frame)
         current_face = faces
+        # Draw a rectangle around the detected face
         for (x, y, w, h) in faces:
-                cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+                cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 0, 255), 2)
         
         img = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         resized_img = cv2.resize(img, (850, 500))
         img = Image.fromarray(resized_img)
+        # Display the image in the GUI
         imgtk = ImageTk.PhotoImage(image=img)
         label_img.imgtk = imgtk
         label_img.configure(image=imgtk)
     except Exception as e:
         print("Camera error:", e)
+    # Update the image in the GUI by calling the update_camera function each 250 ms
     root.after(250, update_camera)
 
-
+# Get prediction results
 def get_prediction():
+    # Select the largest detected face
     largest_face = face_detector.select_largest_face(current_face, current_frame)
  
     if largest_face is None:
         label_result.config(text="No face detected")
         return
     
+    # Display prediction results in the GUI
     result = prediction.predict(largest_face)
     box_gender.config(text=f"Gender: {result["Gender"]}")
     box_gender_conf.config(text=f"Gender Prediction Confidence: {(result["Gender Confidence"] * 100):.2f} %")
     box_age.config(text=f"Age Range: {result["Age Category"]}")
     box_age_conf.config(text=f"Age Prediction Confidence: {result["Age Confidence"] * 100 :.2f} %")
 
-
+# Share prediction results by opening the user's mail app
 def share_results():
     result_text = (
         f"{box_gender.cget('text')}\n"
@@ -119,11 +131,12 @@ def share_results():
     webbrowser.open(f"mailto:?subject={subject}&body={body}")
         
 
-
+# Close the app
 def close():
     camera.close_camera()
     root.destroy()
 
+# Update webcam image in the GUI 
 update_camera()
 
 

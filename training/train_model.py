@@ -11,10 +11,10 @@ from keras.callbacks import EarlyStopping
 DATASET_PATH = "./../data/UTKFace"
 MODEL_PATH = "./../models/age_gender_model.keras"
 NUM_CLASSES = 5
-EPOCHS = 40    #TODO
-BATCH_SIZE = 32 #TODO
+EPOCHS = 40    
+BATCH_SIZE = 32 
 
-# Create the CNN model build architecture
+# Create the CNN model architecture
 def build_model(shape):
     input_layer = keras.Input(shape=shape, name="Input image")
     x = layers.Conv2D(32, 3, activation="relu")(input_layer)
@@ -35,8 +35,9 @@ def build_model(shape):
 
     x = layers.Flatten()(x)
     x = layers.Dense(256, activation="relu")(x)
-    x = layers.Dropout(0.4)(x) # reduce overfitting
+    x = layers.Dropout(0.4)(x) # Reduce overfitting
 
+    # The model has 2 outputs: predicted age category and predicted gender
     output_age = layers.Dense(NUM_CLASSES, activation="softmax", name="age_output")(x)
     output_gender = layers.Dense(1, activation="sigmoid", name="gender_output")(x)
 
@@ -46,6 +47,7 @@ def build_model(shape):
         name="age_gender_model"
     )
 
+    # Compile the model
     model.compile(
         optimizer="adam",
         loss={

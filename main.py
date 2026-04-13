@@ -18,7 +18,7 @@ def save_image(face):
     cv2.imwrite(filename, face)
     print(f"Saved face snapshot to: {filename}")
         
-
+# Test the end-to-end pipeline
 def main():
     camera = Camera()
     detector = FaceDetector()

@@ -15,14 +15,17 @@ AGE_CATEGORY = [
     (40, 59),
     (60, 120),
 ]
-SAMPLES =  7000 # modify sample size for training
+# Sample size for training
+SAMPLES =  7000
 
 def load_dataset(dataset_path):
     if not os.path.isdir(dataset_path):
         raise FileNotFoundError(f"Path to dataset not found: {dataset_path}")
     
     files = os.listdir(dataset_path)
+    # Shuffle the files in the dataset
     random.shuffle(files)
+    # Select a part of the original dataset
     files = files[:SAMPLES]
     
     images = []
@@ -34,10 +37,12 @@ def load_dataset(dataset_path):
         fpath = f"{dataset_path}/{file}"
 
         try:
+            # For each file get the labels embedded in the filename
             age, gender, age_class = get_labels(file)
             image = cv2.imread(fpath)
             if image is None:
-                raise ValueError("Cannot read image")
+                raise ValueError("Cannot read image")\
+            # Apply preprocessing on the image
             preprocessed_image = preprocess_image(image)
             images.append(preprocessed_image)
             genders.append(gender)
@@ -46,7 +51,9 @@ def load_dataset(dataset_path):
         except Exception as e:
             print(f"An error ocurred while accessing file: {file}")
 
+    # Features
     X = np.array(images)
+    # Targets
     y_gender = np.array(genders)
     y_age = np.array(ages)
     y_category = np.array(categories)
@@ -69,11 +76,13 @@ def get_labels(filename):
     if len(labels) != 4:
         raise ValueError(f"Invalid file format: {filename}")
     
+    # Get the labels embedded in the filename
     age = int(labels[0])
     gender = int(labels[1])
     category = get_category(age)
     return age, gender, category
 
+# Determine the age category based on age
 def get_category(age):
     for index, category in enumerate(AGE_CATEGORY):
         if category[0] <= age and age <= category[1]:
@@ -81,6 +90,7 @@ def get_category(age):
     
     raise ValueError(f"Age {age} does not belong in any category")
 
+# Visualize data distribution
 
 def plot_age_distribution(ages):
     sns.histplot(ages, bins=20, kde=True, color='lightgreen', edgecolor='blue')

@@ -4,6 +4,8 @@ class Camera:
     def __init__(self, webcam_index = 0):
         self.index = webcam_index
         self.capture = None
+
+    # Methods for handling camera operations
     
     def start_camera(self):
         self.capture = cv2.VideoCapture(self.index)
