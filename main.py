@@ -20,7 +20,7 @@ def save_image(face):
     print(f"Saved face snapshot to: {filename}")
 
 
-# Test the end-to-end pipeline
+# Testare end-to-end
 def main():
     camera = Camera()
     detector = FaceDetector()

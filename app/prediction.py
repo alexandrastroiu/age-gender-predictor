@@ -17,15 +17,15 @@ AGE_CATEGORY = [
 
 class Prediction:
     def __init__(self):
-        # Load the trained model
+        # Incarca modelul antrenat
         self.model = load_model(MODEL_PATH)
 
     def predict(self, image):
-        # Preprocess the image
+        # Preproceseaza imaginea
         image = preprocess_face(image)
-        # Use the model to predict gender and age category
+        # Foloseste modelul pentru a prezice genul si categoria de varsta
         gender_pred, age_pred = self.model.predict(image)
-        # Gender is labeled as 1 - Female and 0 - Male in the UTKFace dataset
+        # Genul este etichetat ca:  1 - Female si 0 - Male in dataset
         gender = "Female" if gender_pred[0][0] > 0.5 else "Male"
         gender_confidence = (
             gender_pred[0][0] if gender == "Female" else 1 - gender_pred[0][0]

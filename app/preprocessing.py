@@ -4,15 +4,15 @@ import numpy as np
 SIZE = (224, 224)
 
 
-# Image preprocessing before prediction
+# Preprocesarea imaginii inainte de predictie
 def preprocess_face(face):
-    # Resize the image
+    # Redimensioneaza imaginea
     face = cv2.resize(face, SIZE)
-    # Convert the image to RGB
+    # Face conversia imaginii de la BGR la RGB
     face = cv2.cvtColor(face, cv2.COLOR_BGR2RGB)
-    # Normalization
+    # Normalizare
     face = face.astype("float32") / 255.0
-    # Add an extra dimension to represent batch size
+    # Adauga o dimensiune suplimentara pentru a reprezenta batch size
     face = np.expand_dims(face, axis=0)
 
     return face

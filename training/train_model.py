@@ -14,8 +14,7 @@ NUM_CLASSES = 5
 EPOCHS = 40
 BATCH_SIZE = 32
 
-
-# Create the CNN model architecture
+# Creeaza arhitectura modelului CNN
 def build_model(shape):
     input_layer = keras.Input(shape=shape, name="Input image")
     x = layers.Conv2D(32, 3, activation="relu")(input_layer)
@@ -38,7 +37,7 @@ def build_model(shape):
     x = layers.Dense(256, activation="relu")(x)
     x = layers.Dropout(0.4)(x)  # Reduce overfitting
 
-    # The model has 2 outputs: predicted age category and predicted gender
+    # Modelul are 2 iesiri: genul prezis si categoria de varsta prezisa
     output_age = layers.Dense(NUM_CLASSES, activation="softmax", name="age_output")(x)
     output_gender = layers.Dense(1, activation="sigmoid", name="gender_output")(x)
 
@@ -46,7 +45,7 @@ def build_model(shape):
         inputs=input_layer, outputs=[output_gender, output_age], name="age_gender_model"
     )
 
-    # Compile the model
+    # Compileaza modelul
     model.compile(
         optimizer="adam",
         loss={
@@ -54,17 +53,17 @@ def build_model(shape):
             "gender_output": "binary_crossentropy",
         },
         loss_weights={"age_output": 2.0, "gender_output": 1.0},
-        metrics={"age_output": ["accuracy"], "gender_output": ["accuracy"]},
+        metrics={"age_output": ["accuracy"], "gender_output": ["accuracy"]}, # Acuratetea e folosita pentru a monitoriza performanta modelului
     )
 
     return model
 
 
 def main():
-    # Load dataset
+    # Incarca dataset-ul
     X, y_gender, y_age, y_category = load_dataset(DATASET_PATH)
     y_category_encoded = to_categorical(y_category, num_classes=NUM_CLASSES)
-    # Split data into train and test data
+    # Imparte datele in date de antrenare si test
     X_train, X_test, y_gender_train, y_gender_test, y_age_train, y_age_test = (
         train_test_split(
             X,
@@ -76,15 +75,16 @@ def main():
             stratify=y_category,
         )
     )
-    # Check shapes
+    # Verifica dimensiunile
     print(X_train.shape)
     print(X_test.shape)
     print(y_gender_train.shape)
     print(y_gender_test.shape)
     print(y_age_train.shape)
     print(y_age_test.shape)
-    # Build the model
+    # Construieste modelul
     model = build_model((224, 224, 3))
+    # Afiseaza o descriere a arhitecturii modelului
     model.summary()
 
     callbacks = EarlyStopping(
@@ -94,7 +94,7 @@ def main():
         mode="max",
     )
 
-    # Train model
+    # Antreneaza modelul
     history = model.fit(
         X_train,
         {"gender_output": y_gender_train, "age_output": y_age_train},
@@ -106,12 +106,12 @@ def main():
         epochs=EPOCHS,
         callbacks=[callbacks],
     )
-    # Evaluate model
+    # Evalueaza modelul
     results = model.evaluate(
         X_test, {"gender_output": y_gender_test, "age_output": y_age_test}
     )
     print(results)
-    # Save model
+    # Salveaza modelul
     os.makedirs(os.path.dirname(MODEL_PATH), exist_ok=True)
     model.save(MODEL_PATH)
     print(f"\nModel saved to: {MODEL_PATH}")

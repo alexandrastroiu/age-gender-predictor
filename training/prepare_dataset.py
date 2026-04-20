@@ -15,7 +15,7 @@ AGE_CATEGORY = [
     (40, 59),
     (60, 120),
 ]
-# Sample size for training
+# Dimensiunea datelor folosite pentru antrenare
 SAMPLES = 7000
 
 
@@ -24,9 +24,9 @@ def load_dataset(dataset_path):
         raise FileNotFoundError(f"Path to dataset not found: {dataset_path}")
 
     files = os.listdir(dataset_path)
-    # Shuffle the files in the dataset
+    # Amesteca fisierele din dataset
     random.shuffle(files)
-    # Select a part of the original dataset
+    # Selecteaza o parte din dataset-ul original
     files = files[:SAMPLES]
 
     images = []
@@ -38,13 +38,13 @@ def load_dataset(dataset_path):
         fpath = f"{dataset_path}/{file}"
 
         try:
-            # For each file get the labels embedded in the filename
+            # Pentru fiecare fisier, obtine etichetele din numele fisierului
             age, gender, age_class = get_labels(file)
             image = cv2.imread(fpath)
             if image is None:
                 raise ValueError(
                     "Cannot read image"
-                )  # Apply preprocessing on the image
+                )  # Aplica preprocesarea pe imagine
             preprocessed_image = preprocess_image(image)
             images.append(preprocessed_image)
             genders.append(gender)
@@ -80,14 +80,14 @@ def get_labels(filename):
     if len(labels) != 4:
         raise ValueError(f"Invalid file format: {filename}")
 
-    # Get the labels embedded in the filename
+    # Obtine etichetele continute in numele fisierului
     age = int(labels[0])
     gender = int(labels[1])
     category = get_category(age)
     return age, gender, category
 
 
-# Determine the age category based on age
+# Determina categoria de varsta in functie de varsta
 def get_category(age):
     for index, category in enumerate(AGE_CATEGORY):
         if category[0] <= age and age <= category[1]:
@@ -96,7 +96,7 @@ def get_category(age):
     raise ValueError(f"Age {age} does not belong in any category")
 
 
-# Visualize data distribution
+# Vizualizeaza distributia de date
 
 
 def plot_age_distribution(ages):
@@ -125,7 +125,6 @@ def plot_gender_distribution(genders):
     plt.show()
 
 
-# Test
 def main():
     X, y_gender, y_age, y_category = load_dataset(DATASET_PATH)
 
